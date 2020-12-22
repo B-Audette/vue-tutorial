@@ -31,7 +31,7 @@ export default {
   background-color: white;
   border-radius: 5px;
   border: 1px solid #DFE3E8;
-  box-sizing: borer-box;
+  box-sizing: border-box;
   cursor: pointer;
   transition: all 0.25s ease;
 }
