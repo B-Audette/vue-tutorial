@@ -1,5 +1,7 @@
 # vue-tutorial
 
+Followed along with this Vue3 [Tutorial](https://www.youtube.com/watch?v=ZqgiuPt5QZo) from [The Earth is Square](https://www.youtube.com/channel/UC_FBMBKup_b3xk_NfeKlalQ). 
+
 ## Project setup
 ```
 npm install
