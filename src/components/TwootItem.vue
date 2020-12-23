@@ -30,7 +30,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .twoot-item {
   padding: 20px;
   background-color: white;
