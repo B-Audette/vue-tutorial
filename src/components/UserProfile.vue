@@ -1,29 +1,30 @@
 <template>
   <div class="user-profile">
-    <div class="user-profile_user-panel">
-      <h1 class="user-profile_username">@{{ user.username }}</h1>
-      <div class="user-profile_admin-badge" v-if="user.isAdmin">Admin</div>
-      <div class="user-profile_follower-count">
-        <strong>Followers: </strong>{{ followers }}
+    <div class="user-profile_sidebar">
+      <div class="user-profile_user-panel">
+        <h1 class="user-profile_username">@{{ user.username }}</h1>
+        <div class="user-profile_admin-badge" v-if="user.isAdmin">Admin</div>
+        <div class="user-profile_follower-count">
+          <strong>Followers: </strong>{{ followers }}
+        </div>
       </div>
-      <form
-        class="user-profile_create-twoot"
-        @submit.prevent="createNewTwoot"
-        :class="{ '--exceeded': newTwootCharacterCount > 180 }"
-      >
-        <label for="newTwoot"
-          ><strong>New Twoot</strong> ({{ newTwootCharacterCount }}/180)</label
-        >
-        <textarea id="newTwoot" rows="4" v-model="newTwootContent" />
-        <div class="user-profile_create-twoot-type">
-          <label for="newTwootType"><strong>Type: </strong></label>
-          <select id="newTwootType" v-model="selectedTwootType">
-            <option
-              :value="option.value"
-              v-for="option in twootTypes"
-              :key="option.value"
-            >
-              <!-- or you can write it like below (less favorable,   -->
+      <CreateTwootPanel @add-twoot="addTwoot" />
+    </div>
+    <div class="user-profile_twoots-wrapper">
+      <!-- below was replaced with its own component -->
+      <!-- <div class="user-profile_twoot" v-for="twoot in user.twoots" :key="twoot.id"> -->
+      <!-- Add @favorite="toggleFavorite" back into TwootItem here and in methods to activate the favorite option again -->
+      <TwootItem
+        v-for="twoot in user.twoots"
+        :key="twoot.id"
+        :username="user.username"
+        :twoot="twoot"
+      />
+    </div>
+  </div>
+</template>
+
+              <!-- or you can write TwootItem like example below (less favorable,   -->
               <!-- in general it's not a great practice to use an array index as a key on iterated components  -->
               <!-- (this is true for both Vue and React).  -->
               <!-- The reason being is that since arrays can change,  -->
@@ -32,42 +33,19 @@
 
               <!-- Example: -->
               <!-- <option :value="option.value" v-for="(option, index) in twootTypes" :key="index"> -->
-              {{ option.name }}
-            </option>
-          </select>
-        </div>
 
-        <button>Twoot!</button>
-      </form>
-    </div>
-    <div class="user-profile_twoots-wrapper">
-      <!-- below was replaced with its own component -->
-      <!-- <div class="user-profile_twoot" v-for="twoot in user.twoots" :key="twoot.id"> -->
-      <TwootItem
-        v-for="twoot in user.twoots"
-        :key="twoot.id"
-        :username="user.username"
-        :twoot="twoot"
-        @favorite="toggleFavorite"
-      />
-    </div>
-  </div>
-</template>
+
 
 <script>
 import TwootItem from "./TwootItem";
+import CreateTwootPanel from "./CreateTwootPanel"
 
 export default {
   name: "UserProfile",
-  components: { TwootItem },
+  components: { CreateTwootPanel, TwootItem },
   data() {
     return {
-      newTwootContent: "",
-      selectedTwootType: "instant",
-      twootTypes: [
-        { value: "draft", name: "Draft" },
-        { value: "instant", name: "Instant Twoot" },
-      ],
+    
       followers: 0,
       user: {
         id: 1,
@@ -83,42 +61,48 @@ export default {
       },
     };
   },
-  watch: {
-    followers(newFollowerCount, oldFollowerCount) {
-      if (oldFollowerCount < newFollowerCount) {
-        console.log(`${this.user.username} has gained a follower!`);
-      }
-    },
-  },
-  computed: {
-    fullName() {
-      return `${this.user.firstName} ${this.user.lastName}`;
-    },
-    newTwootCharacterCount() {
-      return this.newTwootContent.length;
-    },
-  },
+  // watch: {
+  //   followers(newFollowerCount, oldFollowerCount) {
+  //     if (oldFollowerCount < newFollowerCount) {
+  //       console.log(`${this.user.username} has gained a follower!`);
+  //     }
+  //   },
+  // },
+  // computed: {
+  //   fullName() {
+  //     return `${this.user.firstName} ${this.user.lastName}`;
+  //   },
+  //   newTwootCharacterCount() {
+  //     return this.newTwootContent.length;
+  //   },
+  // },
   methods: {
-    followUser() {
-      this.followers++;
-    },
-    // should favorite it on click, then toggle to not favorite it on next click
-    toggleFavorite(id) {
-      console.log(`favorited twoot #${id}`);
-    },
-    createNewTwoot() {
-      if (this.newTwootContent && this.selectedTwootType !== "draft") {
-        this.user.twoots.unshift({
-          id: this.user.twoots.length + 1,
-          content: this.newTwootContent,
-        });
-        this.newTwootContent = "";
-      }
+    // followUser() {
+    //   this.followers++;
+    addTwoot(twoot) {
+      this.user.twoots.unshift({
+        id: this.user.twoots.length + 1,
+        content: twoot,
+      });
     },
   },
-  mounted() {
-    this.followUser();
-  },
+  // should favorite it on click, then toggle to not favorite it on next click
+  // toggleFavorite(id) {
+  //   console.log(`favorited twoot #${id}`);
+  // },
+  //   createNewTwoot() {
+  //     if (this.newTwootContent && this.selectedTwootType !== "draft") {
+  //       this.user.twoots.unshift({
+  //         id: this.user.twoots.length + 1,
+  //         content: this.newTwootContent,
+  //       });
+  //       this.newTwootContent = "";
+  //     }
+  //   },
+  // },
+  // mounted() {
+  //   this.followUser();
+  // },
 };
 </script>
 
@@ -136,6 +120,7 @@ export default {
     background-color: white;
     border-radius: 5px;
     border: 1px solid #dfe3e8;
+    margin-bottom: auto;
   }
 
   h1 {
@@ -148,29 +133,13 @@ export default {
     border-radius: 5px;
     margin-right: auto;
     padding: 0 10px;
-    margin-bottom: 20px;
+    font-weight: bold;
   }
 }
 
 .user-profile_twoots-wrapper {
   display: grid;
   grid-gap: 10px;
-}
-
-.user-profile_create-twoot {
-  border-top: 1px solid #dfe3e8;
-  display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-
-  &.--exceeded {
-    color: red;
-
-    button {
-      background-color: red;
-      border: none;
-      color: white;
-    }
-  }
+  margin-bottom: auto;
 }
 </style>

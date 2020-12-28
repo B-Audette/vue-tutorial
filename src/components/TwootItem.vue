@@ -1,7 +1,10 @@
 <template>
-  <div class="twoot-item" @click="favoriteTwoot(twoot.id)">
+<!-- Add @click="favoriteTwoot(twoot.id)" back to twoot-item to enable favorite -->
+  <div class="twoot-item">
     <div class="user-profile_twoot">
-      <div class="twoot-item_user">@{{ username }}</div>
+      <div class="twoot-item_user">
+          @{{ username }}
+      </div>
       <div class="twoot-item_content">
         {{ twoot.content }}
       </div>
@@ -22,11 +25,11 @@ export default {
       required: true,
     },
   },
-  methods : {
-      favoriteTwoot(id) {
-          this.$emit('favorite', id)
-      }
-  }
+//   methods : {
+//       favoriteTwoot(id) {
+//           this.$emit('favorite', id)
+//       }
+//   }
 };
 </script>
 
