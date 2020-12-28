@@ -1,29 +1,52 @@
 <template>
   <div id="app">
     <nav>
+      <router-link to="/">
       <div class="navigation_logo">Twotter</div>
+      </router-link>
       <div class="navigation_user">
-        {{ user.username }}
+        {{ state.user.username }}
       </div>
     </nav>
+    <!-- whatever page  you are on, according to the router, is what loads in router-view -->
+    <router-view/>
     <UserProfile />
   </div>
 </template>
 
 <script>
-import UserProfile from "./components/UserProfile";
+import { reactive } from 'vue';
 
 export default {
-  name: "App",
-  components: { UserProfile },
-  data() {
-    return {
+  name: 'App',
+  setup() {
+    const state = reactive({
       user: {
-        username: "ExampleUser"
+        username: 'example'
       }
+    })
+
+    return {
+      state
     }
   }
-};
+}
+//----------------
+// pre-context api
+// ---------------
+//import UserProfile from "./components/UserProfile";
+
+// export default {
+//   name: "App",
+//   components: { UserProfile },
+//   data() {
+//     return {
+//       user: {
+//         username: "ExampleUser"
+//       }
+//     }
+//   }
+// };
 </script>
 
 <style lang="scss">

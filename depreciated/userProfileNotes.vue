@@ -35,7 +35,7 @@
               <!-- <option :value="option.value" v-for="(option, index) in twootTypes" :key="index"> -->
 
 
-
+<!-- before context api script tags below-->
 <script>
 import TwootItem from "./TwootItem";
 import CreateTwootPanel from "./CreateTwootPanel"
