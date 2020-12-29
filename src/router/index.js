@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store'
+import { users } from '../assets/users'
 import Home from '../views/Home.vue'
 import UserProfile from '../views/UserProfile'
 import Admin from '../views/Admin'
@@ -15,7 +17,7 @@ const routes = [
     component: UserProfile
   },
   {
-    path: '/Admin',
+    path: '/admin',
     name: 'Admin',
     component: Admin,
     meta: {
@@ -32,9 +34,17 @@ const router = createRouter({
 // router guards
 
 router.beforeEach(async (to, from, next) => {
-  const isAdmin = true
+  const user = store.state.User.user
+
+  if (!user) {
+    // dispatach is the function you call to run actions
+    // store.commit to run a mutation in this context (like its in the action in strore/index.js)
+    await store.dispatch('User/setUser', users[0])
+  }
+
+  const isAdmin = false
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
-  // if this requires an admin an dyou are not, it will send you home
+  // if this requires an admin and if you are not, it will send you home
   if (requiresAdmin && !isAdmin) next({ name: 'Home' })
   else next()
 })
